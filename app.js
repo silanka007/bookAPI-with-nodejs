@@ -6,41 +6,28 @@ const path = require('path');
 
 const app = express();
 
-const bookRouter = express.Router();
-
 app.use(morgan('tiny'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')));
-app.use('/js', express.static(path.join(__dirname, 'node_module/jquery/dist/')));
+app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist/')));
 
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
 
 const port = process.env.PORT || 3000;
+const navs = [
+    { link: '/books', title: 'BOOKS' },
+    { link: '/authors', title: 'AUTHORS' },
+];
 
-// for book session
-bookRouter.route('/')
-    .get((req, res) => {
-        res.render('books', {
-            title: 'Book Session',
-        });
-    });
-
-bookRouter.route('/single')
-    .get((req, res) => {
-        res.send('this is a single book session');
-    });
+const bookRouter = require('./src/routes/bookRoutes')(navs);
 
 app.use('/books', bookRouter);
 app.get('/', (req, res) => {
     res.render('index', {
         title: 'book library',
-        nav: [
-            { link: '/', title: 'HOME' },
-            { link: '/books', title: 'BOOKS' },
-            { link: '/author', title: 'AUTHOR' },
-        ],
+        navs,
     });
 });
 
