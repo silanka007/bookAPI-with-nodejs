@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const app = express();
-const db = mongoose.connect('mongodb://localhost/bookAPI');
+mongoose.connect('mongodb://localhost/bookAPI', { useNewUrlParser: true, useUnifiedTopology: true });
 const Book = require('./models/bookModel');
 
 const bookRouter = require('./route/bookRouter')(Book);
