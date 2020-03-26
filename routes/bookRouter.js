@@ -1,26 +1,13 @@
 const express = require('express');
+const bookController = require('../controllers/bookController');
 
 const bookRouter = (Book) => {
     const router = express.Router();
+    const controller = bookController(Book);
 
     router.route('/books')
-        .post((req, res) => {
-            const book = new Book(req.body);
-            book.save();
-            return res.status(201).json(book);
-        })
-        .get((req, res) => {
-            const query = {};
-            if (req.query.genre) {
-                query.genre = req.query.genre;
-            }
-            Book.find(query, (err, books) => {
-                if (err) {
-                    return res.send(err);
-                }
-                return res.json(books);
-            });
-        });
+        .post(controller.post)
+        .get(controller.get);
 
     router.route('/books/:bookId')
         // implementing middleware for querying the database for book using bookId

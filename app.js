@@ -9,7 +9,7 @@ const app = express();
 mongoose.connect('mongodb://localhost/bookAPI', { useNewUrlParser: true, useUnifiedTopology: true });
 const Book = require('./models/bookModel');
 
-const bookRouter = require('./route/bookRouter')(Book);
+const bookRouter = require('./routes/bookRouter')(Book);
 
 app.use(morgan('tiny'));
 app.use(bodyParser.urlencoded({ extended: true }));
