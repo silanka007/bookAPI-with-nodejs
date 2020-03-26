@@ -9,42 +9,13 @@ const app = express();
 const db = mongoose.connect('mongodb://localhost/bookAPI');
 const Book = require('./models/bookModel');
 
+const bookRouter = require('./route/bookRouter')(Book);
+
 app.use(morgan('tiny'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const port = process.env.PORT || 3000;
-const bookRouter = express.Router();
-
-// for book session
-bookRouter.route('/books')
-    .post((req, res) => {
-        const book = new Book(req.body);
-        book.save();
-        return res.status(201).json(book);
-    })
-    .get((req, res) => {
-        const query = {};
-        if (req.query.genre) {
-            query.genre = req.query.genre;
-        }
-        Book.find(query, (err, books) => {
-            if (err) {
-                return res.json({ error: 'unable to fetch data' });
-            }
-            return res.json(books);
-        });
-    });
-
-bookRouter.route('/books/:bookId')
-    .get((req, res) => {
-        Book.findById(req.params.bookId, (err, book) => {
-            if (err) {
-                return res.json({ error: 'unable to fetch data' });
-            }
-            return res.json(book);
-        });
-    });
 
 app.use('/api', bookRouter);
 app.get('/', (req, res) => {
